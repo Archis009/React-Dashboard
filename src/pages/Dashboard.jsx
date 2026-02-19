@@ -13,13 +13,10 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-container">
-      <div className="dashboard-header">
-        <div className="dashboard-title">
-          <h1>Dashboard Overview</h1>
-          <p>Welcome back, here's what's happening correctly.</p>
-        </div>
-        <FilterPanel filters={filters} onFilterChange={updateFilter} />
-      </div>
+      {/* Dashboard Header removed as per request */}
+      
+      {/* Filters Full Width */}
+      <FilterPanel filters={filters} onFilterChange={updateFilter} />
 
       {/* KPI Cards */}
       <div className="kpi-grid">

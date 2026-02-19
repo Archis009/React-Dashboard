@@ -4,6 +4,10 @@
   --bg-color: #f1f5f9; /* Slightly darker background for better contrast */
 }
 
+html {
+  scrollbar-gutter: stable;
+}
+
 /* Scrollbar Styling */
 ::-webkit-scrollbar {
   width: 8px;
