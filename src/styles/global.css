@@ -1,0 +1,45 @@
+/* Global Overrides */
+:root {
+  --primary-color: #2563eb;
+  --bg-color: #f1f5f9; /* Slightly darker background for better contrast */
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-color); 
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1; 
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-hover {
+  background: #94a3b8; 
+}
+
+/* Button & Interactives */
+button {
+  font-family: inherit;
+}
+
+/* Focus States */
+:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dashboard-container {
+  animation: fadeIn 0.4s ease-out;
+}
