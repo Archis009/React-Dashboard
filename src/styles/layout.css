@@ -37,7 +37,7 @@ body {
   border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Align items to start */
+  /* justify-content:space-between; Align items to start */
   gap: 48px; /* Add gap between Logo and Nav */
   padding: 0 48px;
   position: sticky;
@@ -53,16 +53,20 @@ body {
     letter-spacing: -0.5px;
 }
 
+.topbar-nav{
+  width: 100%;
+}
+
 .topbar-nav ul {
     display: flex;
+    justify-content:space-around;
     list-style: none;
-    gap: 8px;
 }
 
 .topbar-nav a {
     display: flex;
     align-items: center;
-    gap: 8px;
+    /* gap: 8px; */
     padding: 8px 16px;
     border-radius: 999px; /* Pill shape */
     text-decoration: none;

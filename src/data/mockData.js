@@ -43,7 +43,8 @@ export const generateMockData = () => {
     amount: (Math.random() * 500).toFixed(2),
     status: statuses[Math.floor(Math.random() * statuses.length)],
     region: regions[Math.floor(Math.random() * regions.length)],
-  }));
+    category: categories[Math.floor(Math.random() * categories.length)], // Added for filtering
+  })); 
 
   // 5. Customers List
   const customers = Array.from({ length: 20 }, (_, index) => ({

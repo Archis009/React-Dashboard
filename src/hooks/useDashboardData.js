@@ -8,46 +8,93 @@ export const useDashboardData = () => {
     category: 'All',
   });
 
-  const { orders, revenueData, ordersByCategory, salesByRegion, products, customers } = MOCK_DATA;
+  const { orders } = MOCK_DATA;
 
   // Filter Logic
   const filteredOrders = useMemo(() => {
+    const now = new Date('2023-12-31'); // Fixed "current" date for mock data simulation
+    
     return orders.filter(order => {
-      // Date Filter (Mock logic as data is static/random)
-      // In a real app, we'd parse dates. Here we simulate.
+      const orderDate = new Date(order.date);
       
+      // Date Range Filter
+      if (filters.dateRange !== 'all') {
+        const cutoffDate = new Date(now);
+        switch (filters.dateRange) {
+          case '1m': cutoffDate.setMonth(now.getMonth() - 1); break;
+          case '3m': cutoffDate.setMonth(now.getMonth() - 3); break;
+          case '6m': cutoffDate.setMonth(now.getMonth() - 6); break;
+          case '1y': cutoffDate.setFullYear(now.getFullYear() - 1); break;
+          default: break;
+        }
+        if (orderDate < cutoffDate) return false;
+      }
+
       // Region Filter
       if (filters.region !== 'All' && order.region !== filters.region) return false;
       
-      // Category Filter (derived from product or explicit)
-      // Our order mock doesn't have category directly, but let's assume it does for simplicity
-      // or we simulate it. The mock data generator adds 'category' to orders for this purpose maybe?
-      // Wait, let's check mockData.js. 
-      // I generated: id, customer, date, amount, status, region. 
-      // I missed category in orders mock data! 
-      // I should assume pure random category for now or map it.
-      // Let's assume we can't filter orders by category easily without joining, 
-      // so we might filter the charts instead or update the mock logic.
-      // For now, I'll skip category filtering on the *orders list* if it's not there,
-      // but KPI cards usually depend on aggregated data.
+      // Category Filter
+      if (filters.category !== 'All' && order.category !== filters.category) return false;
       
       return true;
     });
   }, [filters, orders]);
 
-  // KPIs
+  // Derived KPIs
   const kpiData = useMemo(() => {
     const totalRevenue = filteredOrders.reduce((acc, order) => acc + parseFloat(order.amount), 0);
     const totalOrders = filteredOrders.length;
-    const totalCustomers = new Set(filteredOrders.map(o => o.customer)).size; // Unique customers in period
+    const totalCustomers = new Set(filteredOrders.map(o => o.customer)).size;
     const conversionRate = 2.4; // Static for now
 
     return {
-      revenue: totalRevenue,
+      revenue: totalRevenue.toFixed(2),
       orders: totalOrders,
       customers: totalCustomers,
       conversionRate,
     };
+  }, [filteredOrders]);
+
+  // Derived Chart Data
+  const charts = useMemo(() => {
+    // Revenue Over Time (Group by Month)
+    const revenueMap = {};
+    filteredOrders.forEach(order => {
+      const month = new Date(order.date).toLocaleString('default', { month: 'short' });
+      revenueMap[month] = (revenueMap[month] || 0) + parseFloat(order.amount);
+    });
+    
+    const revenueData = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+      .map(month => ({
+        name: month,
+        revenue: revenueMap[month] || 0
+      }));
+
+    // Orders by Category
+    const categoryMap = {};
+    filteredOrders.forEach(order => {
+      const cat = order.category || 'Other';
+      categoryMap[cat] = (categoryMap[cat] || 0) + 1;
+    });
+    
+    const ordersByCategory = Object.keys(categoryMap).map(cat => ({
+      name: cat,
+      orders: categoryMap[cat]
+    }));
+
+    // Sales by Region
+    const regionMap = {};
+    filteredOrders.forEach(order => {
+      const reg = order.region || 'Other';
+      regionMap[reg] = (regionMap[reg] || 0) + 1;
+    });
+    
+    const salesByRegion = Object.keys(regionMap).map(reg => ({
+      name: reg,
+      value: regionMap[reg]
+    }));
+
+    return { revenueData, ordersByCategory, salesByRegion };
   }, [filteredOrders]);
 
   const updateFilter = (key, value) => {
@@ -59,9 +106,9 @@ export const useDashboardData = () => {
     updateFilter,
     kpiData,
     charts: {
-      revenue: revenueData, // static for now, usually would filter
-      ordersByCategory,
-      salesByRegion,
+      revenue: charts.revenueData,
+      ordersByCategory: charts.ordersByCategory,
+      salesByRegion: charts.salesByRegion,
     },
     recentOrders: filteredOrders.slice(0, 5)
   };
