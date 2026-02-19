@@ -10,14 +10,12 @@ export const useDashboardData = () => {
 
   const { orders } = MOCK_DATA;
 
-  // Filter Logic
   const filteredOrders = useMemo(() => {
-    const now = new Date('2023-12-31'); // Fixed "current" date for mock data simulation
+    const now = new Date('2023-12-31'); 
     
     return orders.filter(order => {
       const orderDate = new Date(order.date);
       
-      // Date Range Filter
       if (filters.dateRange !== 'all') {
         const cutoffDate = new Date(now);
         switch (filters.dateRange) {
@@ -30,22 +28,19 @@ export const useDashboardData = () => {
         if (orderDate < cutoffDate) return false;
       }
 
-      // Region Filter
       if (filters.region !== 'All' && order.region !== filters.region) return false;
       
-      // Category Filter
       if (filters.category !== 'All' && order.category !== filters.category) return false;
       
       return true;
     });
   }, [filters, orders]);
 
-  // Derived KPIs
   const kpiData = useMemo(() => {
     const totalRevenue = filteredOrders.reduce((acc, order) => acc + parseFloat(order.amount), 0);
     const totalOrders = filteredOrders.length;
     const totalCustomers = new Set(filteredOrders.map(o => o.customer)).size;
-    const conversionRate = 2.4; // Static for now
+    const conversionRate = 2.4;
 
     return {
       revenue: totalRevenue.toFixed(2),
@@ -55,9 +50,7 @@ export const useDashboardData = () => {
     };
   }, [filteredOrders]);
 
-  // Derived Chart Data
   const charts = useMemo(() => {
-    // Revenue Over Time (Group by Month)
     const revenueMap = {};
     filteredOrders.forEach(order => {
       const month = new Date(order.date).toLocaleString('default', { month: 'short' });
@@ -70,7 +63,6 @@ export const useDashboardData = () => {
         revenue: revenueMap[month] || 0
       }));
 
-    // Orders by Category
     const categoryMap = {};
     filteredOrders.forEach(order => {
       const cat = order.category || 'Other';
@@ -82,7 +74,6 @@ export const useDashboardData = () => {
       orders: categoryMap[cat]
     }));
 
-    // Sales by Region
     const regionMap = {};
     filteredOrders.forEach(order => {
       const reg = order.region || 'Other';

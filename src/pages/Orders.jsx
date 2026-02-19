@@ -13,7 +13,6 @@ const Orders = () => {
 
   const { orders } = MOCK_DATA;
 
-  // Filter Logic
   const filteredOrders = useMemo(() => {
     return orders.filter(order => {
       const matchesSearch = 
@@ -26,7 +25,6 @@ const Orders = () => {
     });
   }, [orders, searchTerm, statusFilter]);
 
-  // Pagination Logic
   const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
   const paginatedOrders = useMemo(() => {
     const start = (currentPage - 1) * itemsPerPage;
@@ -39,7 +37,6 @@ const Orders = () => {
     }
   };
 
-  // Columns Configuration
   const columns = [
     { header: 'Order ID', accessor: 'id' },
     { header: 'Customer', accessor: 'customer' },

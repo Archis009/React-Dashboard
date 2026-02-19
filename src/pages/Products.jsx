@@ -11,7 +11,6 @@ const Products = () => {
   
   const { products } = MOCK_DATA;
 
-  // Filter Logic
   const filteredProducts = useMemo(() => {
     return products.filter(product => {
       const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -21,14 +20,13 @@ const Products = () => {
     });
   }, [products, searchTerm, categoryFilter]);
 
-  // Aggregate Stats (Top selling product)
+
   const topProduct = useMemo(() => {
       if (filteredProducts.length === 0) return null;
       return filteredProducts.reduce((prev, current) => (prev.unitsSold > current.unitsSold) ? prev : current);
   }, [filteredProducts]);
 
 
-  // Columns Configuration
   const columns = [
     { 
       header: 'Product Name', 

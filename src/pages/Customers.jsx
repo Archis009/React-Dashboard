@@ -12,7 +12,7 @@ const Customers = () => {
 
   const { customers } = MOCK_DATA;
 
-  // Filter Logic
+
   const filteredCustomers = useMemo(() => {
     return customers.filter(customer => {
       return (
@@ -22,7 +22,7 @@ const Customers = () => {
     });
   }, [customers, searchTerm]);
 
-  // Pagination Logic
+
   const totalPages = Math.ceil(filteredCustomers.length / itemsPerPage);
   const paginatedCustomers = useMemo(() => {
     const start = (currentPage - 1) * itemsPerPage;
@@ -35,7 +35,7 @@ const Customers = () => {
     }
   };
 
-  // Columns Configuration
+
   const columns = [
     { 
       header: 'Customer', 
