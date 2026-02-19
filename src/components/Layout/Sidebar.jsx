@@ -38,10 +38,7 @@ const Sidebar = () => {
         </ul>
       </nav>
       <div className="sidebar-footer">
-        <button className="logout-btn">
-          <LogOut size={20} />
-          <span>Logout</span>
-        </button>
+        {/* Logout button removed as per request */}
       </div>
     </div>
   );
